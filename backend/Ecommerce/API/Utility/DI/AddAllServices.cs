@@ -20,6 +20,8 @@ namespace API.Utility.DI
                     config.RegisterValidatorsFromAssemblyContaining<Edit>();
                 });
 
+            services.AddMvcCore().AddDataAnnotations();
+
             services.AddScoped<IMongoContext, MongoContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
 

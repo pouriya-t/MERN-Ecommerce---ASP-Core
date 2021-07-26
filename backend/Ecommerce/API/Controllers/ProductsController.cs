@@ -1,14 +1,8 @@
-﻿using Application.Products;
-using Application.Products.Commands;
+﻿using Application.Products.Commands;
 using Application.Products.Queries;
-using Domain.Interfaces;
-using Domain.Product;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -27,10 +21,14 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
+        // /api/v1/products?keyword=charmount&price[gt]=20&price[lt]=27
+        // /api/v1/products?page=1
+        // /api/v1/products
         [HttpGet("products")]
-        public async Task<IActionResult> GetProducts()
+        public async Task<IActionResult> GetProducts(int? page = 1,string keyword = null, 
+            [FromQuery(Name = "price")] IDictionary<string, int> price = null)
         {
-            return Ok(await _mediator.Send(new List()));
+            return Ok(await _mediator.Send(new List() { Keyword = keyword, Price = price , Page = page }));
         }
 
         [HttpGet("product/{id}")]
