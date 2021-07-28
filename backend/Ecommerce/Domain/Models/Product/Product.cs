@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.ComponentModel.DataAnnotations;
 
 
-namespace Domain.Product
+namespace Domain.Models.Product
 {
     public class Product
     {
@@ -35,6 +35,9 @@ namespace Domain.Product
         public ICollection<Review> Reviews { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string User { get; set; }
 
     }
 }

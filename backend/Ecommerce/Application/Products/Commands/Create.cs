@@ -1,5 +1,6 @@
-﻿using Domain.Interfaces;
-using Domain.Product;
+﻿using Domain.Interfaces.Repositories;
+using Domain.Interfaces.UserAccessor;
+using Domain.Models.Product;
 using MediatR;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -44,13 +45,18 @@ namespace Application.Products.Commands
         public class Handler : IRequestHandler<Create, object>
         {
             private readonly IProductRepository _productRepository;
-            public Handler(IProductRepository productRepository)
+            private readonly IUserAccessor _userAccessor;
+
+            public Handler(IProductRepository productRepository, IUserAccessor userAccessor)
             {
                 _productRepository = productRepository;
+                _userAccessor = userAccessor;
             }
             public async Task<object> Handle(Create request, CancellationToken cancellationToken)
             {
-                
+                var user = _userAccessor.GetUser();
+                var a = user.Id;
+
                 var product = new Product
                 {
                     Name = request.Name,
@@ -62,9 +68,10 @@ namespace Application.Products.Commands
                     Seller = request.Seller,
                     Stock = request.Stock,
                     NumOfReviews = request.NumOfReviews,
-                    Reviews = request.Reviews
+                    Reviews = request.Reviews,
+                    User = user.Id.ToString()
                 };
-
+                
                 await _productRepository.CreateProduct(product);
 
                 return new { success = true, Product = product  };

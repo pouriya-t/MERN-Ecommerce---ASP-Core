@@ -5,14 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Product
+namespace Domain.Models.Product
 {
-    public class Image
+    public class Review
     {
         [Required]
-        public string PublicId { get; set; }
+        public string Name { get; set; }
 
         [Required]
-        public string Url { get; set; }
+        public double Rating { get; set; }
+
+        [Required]
+        public string Comment { get; set; }
     }
 }

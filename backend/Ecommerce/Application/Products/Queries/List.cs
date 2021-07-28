@@ -1,5 +1,5 @@
-﻿using Domain.Interfaces;
-using Domain.Product;
+﻿using Domain.Interfaces.Repositories;
+using Domain.Models.Product;
 using MediatR;
 using System;
 using System.Collections.Generic;

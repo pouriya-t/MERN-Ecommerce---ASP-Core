@@ -1,16 +1,61 @@
-﻿using Domain.Product;
+﻿using Domain.Models.Product;
+using Domain.Models.User;
+using Microsoft.AspNetCore.Identity;
 using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace API.Context
+namespace Persistence.Context
 {
-    public static class ProductSeedData
+
+    public class SeedData
     {
-        public static void SeedData(IMongoCollection<Product> productCollection)
+        public static string User = "User";
+        public static string Admin = "Admin";
+
+        public static async Task SeedUsers(UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager)
+        {
+            if (!await roleManager.RoleExistsAsync(Admin))
+            {
+                await roleManager.CreateAsync(new ApplicationRole(Admin));
+                await roleManager.CreateAsync(new ApplicationRole(User));
+            }
+
+
+            if (!userManager.Users.Any())
+            {
+                var users = new List<ApplicationUser>
+                {
+                    new ApplicationUser
+                    {
+                        UserName = "admin@gmail.com",
+                        Email = "admin@gmail.com"
+                    },
+                    new ApplicationUser
+                    {
+                        UserName = "user@gmail.com",
+                        Email = "user@gmail.com"
+                    },
+                };
+
+                foreach (var user in users)
+                {
+                    await userManager.CreateAsync(user, "Admin123*");
+                    if (user.UserName == "admin@gmail.com")
+                    {
+                        await userManager.AddToRoleAsync(user, Admin);
+                    }
+                    else
+                    {
+                        await userManager.AddToRoleAsync(user, User);
+                    }
+                }
+            }
+        }
+
+        public static void SeedProducts(IMongoCollection<Product> productCollection)
         {
             bool existProduct = productCollection.Find(p => true).Any();
 

@@ -1,11 +1,12 @@
-﻿using MongoDB.Driver;
-using System;
-using System.Threading.Tasks;
+﻿using Domain.Models.Product;
+using Domain.Models.User;
+using MongoDB.Driver;
 
 namespace Domain.Interfaces
 {
     public interface IMongoContext
     {
-        IMongoCollection<Product.Product> Products { get; }
+        IMongoCollection<Product> Products { get; }
+        IMongoCollection<ApplicationUser> Users { get; }
     }
 }

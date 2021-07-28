@@ -1,11 +1,13 @@
 using API.Middleware;
 using API.Utility.DI;
+using Persistence.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Infrastructure.EmailService;
 
 namespace API
 {
@@ -22,12 +24,15 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
 
-          
+
+            var emailConfig = Configuration
+                .GetSection("EmailConfiguration")
+                .Get<EmailConfiguration>();
+            services.AddSingleton(emailConfig);
+            services.Configure<EmailConfiguration>(Configuration.GetSection("EmailConfiguration"));
 
 
-            services.AddAllServices();
-
-            
+            services.AddServices(Configuration);
 
 
             services.AddSwaggerGen(c =>
@@ -53,6 +58,7 @@ namespace API
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

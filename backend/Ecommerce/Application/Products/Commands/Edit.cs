@@ -1,13 +1,10 @@
-﻿using Domain.Interfaces;
-using Domain.Product;
+﻿using Domain.Interfaces.Repositories;
+using Domain.Models.Product;
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Products.Commands

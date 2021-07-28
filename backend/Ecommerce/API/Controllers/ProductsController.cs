@@ -1,12 +1,17 @@
 ﻿using Application.Products.Commands;
 using Application.Products.Queries;
+using Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace API.Controllers
 {
+    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize]
     [ApiController]
     [Route("api/v1")]
     public class ProductsController : ControllerBase
@@ -25,10 +30,10 @@ namespace API.Controllers
         // /api/v1/products?page=1
         // /api/v1/products
         [HttpGet("products")]
-        public async Task<IActionResult> GetProducts(int? page = 1,string keyword = null, 
+        public async Task<IActionResult> GetProducts(int? page = 1, string keyword = null,
             [FromQuery(Name = "price")] IDictionary<string, int> price = null)
         {
-            return Ok(await _mediator.Send(new List() { Keyword = keyword, Price = price , Page = page }));
+            return Ok(await _mediator.Send(new List() { Keyword = keyword, Price = price, Page = page }));
         }
 
         [HttpGet("product/{id}")]
@@ -37,12 +42,14 @@ namespace API.Controllers
             return Ok(await _mediator.Send(new Detail() { Id = id }));
         }
 
+        [Authorize(Roles = SD.Admin)]
         [HttpPost("admin/product/new")]
         public async Task<IActionResult> Create(Create command)
         {
             return CreatedAtAction("Create", await _mediator.Send(command));
         }
 
+        [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/product/{id}")]
         public async Task<IActionResult> Edit(string id, Edit command)
         {
@@ -50,6 +57,7 @@ namespace API.Controllers
             return Ok(await _mediator.Send(command));
         }
 
+        [Authorize(Roles = SD.Admin)]
         [HttpDelete("admin/product/{id}")]
         public async Task<IActionResult> Delete(string id)
         {

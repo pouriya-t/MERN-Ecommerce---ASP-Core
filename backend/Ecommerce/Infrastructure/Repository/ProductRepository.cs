@@ -1,6 +1,6 @@
 ﻿using Domain.Interfaces;
-using Domain.Product;
-using MongoDB.Bson;
+using Domain.Interfaces.Repositories;
+using Domain.Models.Product;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
