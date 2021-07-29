@@ -54,7 +54,7 @@ namespace Application.Products.Commands
             }
             public async Task<object> Handle(Create request, CancellationToken cancellationToken)
             {
-                var user = _userAccessor.GetUser();
+                var user = _userAccessor.GetUserAsync();
                 var a = user.Id;
 
                 var product = new Product

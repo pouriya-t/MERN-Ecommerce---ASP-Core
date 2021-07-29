@@ -7,6 +7,6 @@ namespace Domain.Interfaces.Jwt
     public interface IJwtGenerator
     {
         Task<TokenModel> CreateToken(ApplicationUser user);
-        RefreshToken GenerateRefreshToken();
+        string GenerateRefreshToken();
     }
 }

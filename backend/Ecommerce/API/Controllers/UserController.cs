@@ -1,6 +1,9 @@
-﻿using Application.Users.Commands;
+﻿using Application.DTO.User;
+using Application.Users.Commands;
 using Application.Users.Queries;
+using Infrastructure;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -20,10 +23,18 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
+        [Authorize(Roles = SD.Admin)]
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
             return Ok(await _mediator.Send(new List()));
+        }
+
+        [Authorize(Roles = SD.Admin)]
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUser(string id)
+        {
+            return Ok(await _mediator.Send(new GetUser() { Id = id }));
         }
 
         [HttpPost("register")]
@@ -40,6 +51,37 @@ namespace API.Controllers
             return Ok(new { Success = true, Token = getUser.RefreshToken });
         }
 
+        [Authorize]
+        [HttpGet("me")]
+        public async Task<ActionResult> Profile()
+        {
+            return Ok(await _mediator.Send(new Profile()));
+        }
+
+        [Authorize]
+        [HttpPut("me/update")]
+        public async Task<ActionResult> UpdateProfile(UpdateProfile command)
+        {
+            return Ok(await _mediator.Send(command));
+        }
+
+        [Authorize(Roles = SD.Admin)]
+        [HttpPut("admin/user/{id}")]
+        public async Task<ActionResult> AdminUpdate(string id ,AdminUpdate command)
+        {
+            command.Id = id;
+            return Ok(await _mediator.Send(command));
+        }
+
+        [Authorize(Roles = SD.Admin)]
+        [HttpDelete("admin/user/{id}")]
+        public async Task<ActionResult> AdminDelete(string id, AdminDelete command)
+        {
+            command.Id = id;
+            return Ok(await _mediator.Send(command));
+        }
+
+        [Authorize]
         [HttpPost("logout")]
         public async Task<ActionResult> Logout(Logout query)
         {
@@ -53,35 +95,56 @@ namespace API.Controllers
         }
 
         [HttpPost("password/forgot")]
-        public async Task<ActionResult> Forgot(ForgotPassword command)
+        public async Task<ActionResult> ForgotPassword(ForgotPassword command)
         {
             return Ok(await _mediator.Send(command));
         }
 
         [HttpPut("password/reset/{*token}")]
-        public async Task<ActionResult> Reset(string token,ResetPassword command)
+        public async Task<ActionResult> ResetPassword(string token,ResetPassword command)
         {
             command.Token = token;
             return Ok(await _mediator.Send(command));
         }
 
-
-
+        [HttpPut("password/update")]
+        public async Task<ActionResult> UpdatePassword(UpdatePassword command)
+        {
+            var user = await _mediator.Send(command);
+            SetTokenCookie(user.RefreshToken);
+            return Ok(new { Success = true, Token = user.RefreshToken , User = user });
+        }
 
         // set and remove cookie
         private void SetTokenCookie(string refreshToken)
         {
-            var cookieOptions = new CookieOptions
-            {
-                HttpOnly = true,
-                Expires = DateTime.UtcNow.AddDays(7)
-            };
-            Response.Cookies.Append("token", refreshToken, cookieOptions);
+            Response.Cookies.Append("token", refreshToken);
         }
+
+
 
         private void DeleteCookie()
         {
             Response.Cookies.Delete("token");
         }
+
+        //private void ExpireToken(string refreshToken)
+        //{
+
+        //    var cookieOptions = new CookieOptions
+        //    {
+        //        HttpOnly = true,
+        //        Expires = DateTime.Now
+        //    };
+        //}
+
+        //public async Task<ActionResult<User>> RefreshToken(Application.User.RefreshToken.Command command)
+        //{
+        //    command.RefreshToken = Request.Cookies["refreshToken"];
+        //    var user = await Mediator.Send(command);
+        //    SetTokenCookie(user.RefreshToken);
+        //    return user;
+        //}
+
     }
 }

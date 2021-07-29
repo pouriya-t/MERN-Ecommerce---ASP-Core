@@ -49,21 +49,33 @@ namespace Infrastructure.Security.JwtGenerator
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSiginKey, SecurityAlgorithms.HmacSha256Signature)
                 );
-
+            
             var token = new JwtSecurityTokenHandler().WriteToken(generateToken);
             var validTo = generateToken.ValidTo.ToString("yyyy-MM-ddThh:mm:ss");
             return new TokenModel { Token = token, ValidTo = validTo };
         }
 
-        public RefreshToken GenerateRefreshToken()
+        public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
-            using var rng = RandomNumberGenerator.Create();
-            rng.GetBytes(randomNumber);
-            return new RefreshToken
+            using (var rng = RandomNumberGenerator.Create())
             {
-                Token = Convert.ToBase64String(randomNumber)
-            };
+                rng.GetBytes(randomNumber);
+                return Convert.ToBase64String(randomNumber);
+            }
         }
+
+        //public RefreshToken GenerateRefreshToken()
+        //{
+        //    var randomNumber = new byte[32];
+        //    using var rng = RandomNumberGenerator.Create();
+        //    rng.GetBytes(randomNumber);
+        //    return new RefreshToken
+        //    {
+        //        Token = Convert.ToBase64String(randomNumber)
+        //    };
+        //}
+
+
     }
 }

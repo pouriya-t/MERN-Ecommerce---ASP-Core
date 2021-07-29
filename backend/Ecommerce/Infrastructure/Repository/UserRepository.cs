@@ -1,6 +1,7 @@
 ﻿using Domain.Interfaces;
 using Domain.Interfaces.Repositories;
 using Domain.Models.User;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using System;
@@ -23,19 +24,25 @@ namespace Infrastructure.Repository
             return await _context.Users.Find(p => p.Email == userName).AnyAsync();
         }
 
+
         public async Task<IEnumerable<ApplicationUser>> GetUsers()
         {
             return await _context.Users.Find(p => true).ToListAsync();
         }
 
-        public ApplicationUser GetUser(string userName)
+        public async Task<ApplicationUser> GetUserByIdAsync(string id)
         {
-            return _context.Users.Find(p => p.UserName == userName).FirstOrDefault();
+            return await _context.Users.Find(p => p.Id == ObjectId.Parse(id)).FirstOrDefaultAsync();
         }
 
-        public ApplicationUser GetUserByTokenResetPassword(string tokenResetPassword)
+        public async Task<ApplicationUser> GetUserAsync(string userName)
         {
-            return _context.Users.Find(p => p.ResetPasswordToken == tokenResetPassword).FirstOrDefault();
+            return await _context.Users.Find(p => p.UserName == userName).FirstOrDefaultAsync();
+        }
+
+        public async Task<ApplicationUser> GetUserByTokenResetPasswordAsync(string tokenResetPassword)
+        {
+            return await _context.Users.Find(p => p.ResetPasswordToken == tokenResetPassword).FirstOrDefaultAsync();
         }
 
         public async Task<bool> UpdateUser(ApplicationUser user)
@@ -44,6 +51,15 @@ namespace Infrastructure.Repository
                 .ReplaceOneAsync(filter: g => g.Id == user.Id, replacement: user);
 
             return updateResult.IsAcknowledged && updateResult.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteUser(string id)
+        {
+            FilterDefinition<ApplicationUser> filter = Builders<ApplicationUser>.Filter.Eq(p => p.Id , ObjectId.Parse(id));
+
+            DeleteResult deleteResult = await _context.Users.DeleteOneAsync(filter);
+
+            return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
         }
 
 

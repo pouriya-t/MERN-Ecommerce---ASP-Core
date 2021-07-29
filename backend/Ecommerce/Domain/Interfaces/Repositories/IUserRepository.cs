@@ -7,9 +7,11 @@ namespace Domain.Interfaces.Repositories
     public interface IUserRepository
     {
         Task<IEnumerable<ApplicationUser>> GetUsers();
-        ApplicationUser GetUser(string userName);
-        ApplicationUser GetUserByTokenResetPassword(string tokenResetPassword);
+        Task<ApplicationUser> GetUserAsync(string userName);
+        Task<ApplicationUser> GetUserByIdAsync(string id);
+        Task<ApplicationUser> GetUserByTokenResetPasswordAsync(string tokenResetPassword);
         Task<bool> AnyUser(string userName);
         Task<bool> UpdateUser(ApplicationUser user);
+        Task<bool> DeleteUser(string id);
     }
 }

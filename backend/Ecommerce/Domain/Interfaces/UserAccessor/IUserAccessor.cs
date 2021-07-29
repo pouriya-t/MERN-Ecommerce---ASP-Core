@@ -1,10 +1,12 @@
 ﻿using Domain.Models.User;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Domain.Interfaces.UserAccessor
 {
     public interface IUserAccessor
     {
-        ApplicationUser GetUser();
+        Task<ApplicationUser> GetUserAsync();
+        Task<IList<string>> GetRolesAsync(ApplicationUser user);
     }
 }

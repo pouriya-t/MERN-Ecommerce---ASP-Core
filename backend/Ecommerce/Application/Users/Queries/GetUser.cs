@@ -10,10 +10,12 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Queries
 {
-    public class List : IRequest<object>
+    public class GetUser : IRequest<object>
     {
 
-        public class Handler : IRequestHandler<List, object>
+        public string Id { get; set; }
+
+        public class Handler : IRequestHandler<GetUser, object>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserAccessor _userAccessor;
@@ -24,18 +26,15 @@ namespace Application.Users.Queries
                 _userAccessor = userAccessor;
             }
 
-            public async Task<object> Handle(List query, CancellationToken cancellationToken)
+            public async Task<object> Handle(GetUser query, CancellationToken cancellationToken)
             {
-                var users = await _userRepository.GetUsers();
-                List<UserDto> userDtos = new List<UserDto>();
-
-                foreach (var user in users)
+                var user = await _userRepository.GetUserByIdAsync(query.Id);
+                if(user != null)
                 {
                     var role = await _userAccessor.GetRolesAsync(user);
-                    var userFromDto = new UserDto(user, role);
-                    userDtos.Add(userFromDto);
+                    return new { Success = true, User = new UserDto(user, role) };
                 }
-                return new { Success = true, User = userDtos };
+                return new { Success = false, Message = "User not found" };
             }
         }
     }

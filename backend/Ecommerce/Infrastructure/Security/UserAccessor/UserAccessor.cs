@@ -3,7 +3,7 @@ using Domain.Interfaces.UserAccessor;
 using Domain.Models.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Security.UserAccessor
@@ -12,19 +12,26 @@ namespace Infrastructure.Security.UserAccessor
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public UserAccessor(IHttpContextAccessor httpContextAccessor,
-                            IUserRepository userRepository)
+                            IUserRepository userRepository,UserManager<ApplicationUser> userManager)
         {
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
+            _userManager = userManager;
         }
 
-        public ApplicationUser GetUser()
+        public async Task<ApplicationUser> GetUserAsync()
         {
             var userName = _httpContextAccessor.HttpContext.User.Identity.Name;
-            var user = _userRepository.GetUser(userName);
+            var user = await _userRepository.GetUserAsync(userName);
             return user;
+        }
+
+        public async Task<IList<string>> GetRolesAsync(ApplicationUser user)
+        {
+            return await _userManager.GetRolesAsync(user);
         }
     }
 }

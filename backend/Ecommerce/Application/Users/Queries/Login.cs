@@ -1,4 +1,5 @@
-﻿using Application.Errors;
+﻿using Application.DTO.User;
+using Application.Errors;
 using Domain.Interfaces.Jwt;
 using Domain.Models.User;
 using MediatR;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Queries
 {
-    public class Login : IRequest<ApplicationUser>
+    public class Login : IRequest<UserDto>
     {
 
         [Required]
@@ -22,7 +23,7 @@ namespace Application.Users.Queries
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public class Handler : IRequestHandler<Login, ApplicationUser>
+        public class Handler : IRequestHandler<Login, UserDto>
         {
 
             private readonly UserManager<ApplicationUser> _userManager;
@@ -37,20 +38,22 @@ namespace Application.Users.Queries
                 _userManager = userManager;
             }
 
-            public async Task<ApplicationUser> Handle(Login request, CancellationToken cancellationToken)
+            public async Task<UserDto> Handle(Login request, CancellationToken cancellationToken)
             {
                 var user = await _userManager.FindByNameAsync(request.Email);
 
                 if (user == null)
                     throw new RestException(HttpStatusCode.NotFound);
 
-                var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+                var role = await _userManager.GetRolesAsync(user);
 
+                var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+               
                 if (result.Succeeded)
                 {
                     var token = _jwtGenerator.CreateToken(user);
                     user.RefreshToken = token.Result.Token;
-                    return user;
+                    return new UserDto(user,role);
                 }
                 throw new Exception("Your request has a problem");
             }

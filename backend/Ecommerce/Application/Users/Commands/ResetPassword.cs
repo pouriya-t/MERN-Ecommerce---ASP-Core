@@ -1,4 +1,5 @@
-﻿using Domain.Interfaces.EmailService;
+﻿using Application.DTO.User;
+using Domain.Interfaces.EmailService;
 using Domain.Interfaces.Jwt;
 using Domain.Interfaces.Repositories;
 using Domain.Models.EmailService;
@@ -48,7 +49,8 @@ namespace Application.Users.Queries
 
             public async Task<object> Handle(ResetPassword request,CancellationToken cancellationToken)
             {
-                var user = _userRepository.GetUserByTokenResetPassword(request.Token);
+                var user = await _userRepository.GetUserByTokenResetPasswordAsync(request.Token);
+                var role = await _userManager.GetRolesAsync(user);
 
                 if(user != null)
                 {
@@ -58,7 +60,7 @@ namespace Application.Users.Queries
                     if (resetPassResult.Succeeded)
                     {
                         var token = _jwtGenerator.CreateToken(user);
-                        return new { Success = true, Token = token.Result.Token , User = user };
+                        return new { Success = true, Token = token.Result.Token , User = new UserDto(user,role) };
                     }
                 }
 

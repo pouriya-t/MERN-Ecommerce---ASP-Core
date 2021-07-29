@@ -10,6 +10,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Application.DTO.User;
 
 namespace Application.Users.Commands
 {
@@ -54,16 +55,17 @@ namespace Application.Users.Commands
 
                 var createUser = await _userManager.CreateAsync(user, request.Password);
                 var createRole = await _userManager.AddToRoleAsync(user, SD.User);
+                var role = await _userManager.GetRolesAsync(user);
 
                 if (createUser.Succeeded && createRole.Succeeded)
                 {
                     var token = _jwtGenerator.CreateToken(user);
-                    return new 
-                    { 
-                        Success = true, 
-                        Token = token.Result.Token , 
-                        ValidTo = token.Result.ValidTo , 
-                        User = user 
+                    return new
+                    {
+                        Success = true,
+                        Token = token.Result.Token,
+                        ValidTo = token.Result.ValidTo,
+                        User = new UserDto(user, role) 
                     };
                 }
                 throw new Exception("Your request has a problem");
