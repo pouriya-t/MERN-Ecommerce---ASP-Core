@@ -35,7 +35,7 @@ namespace API.Utility.DI
             services.AddControllers()
                 .AddFluentValidation(config =>
                 {
-                    config.RegisterValidatorsFromAssemblyContaining<Edit>();
+                    config.RegisterValidatorsFromAssemblyContaining<EditProduct>();
                 });
 
 
@@ -118,6 +118,7 @@ namespace API.Utility.DI
             services.AddScoped<IMongoContext, MongoContext>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
 

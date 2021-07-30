@@ -1,6 +1,7 @@
 ﻿using Domain.Models.Product;
 using Domain.Models.User;
 using Microsoft.AspNetCore.Identity;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,17 +56,19 @@ namespace Persistence.Context
             }
         }
 
-        public static void SeedProducts(IMongoCollection<Product> productCollection)
+        public static void SeedProducts(IMongoCollection<Product> productCollection
+                                ,IMongoCollection<ApplicationUser> userCollection)
         {
             bool existProduct = productCollection.Find(p => true).Any();
 
             if (!existProduct)
             {
-                productCollection.InsertManyAsync(GetPreconfigureProducts());
+                var user = userCollection.Find(u => u.Email == "admin@gmail.com").FirstOrDefault();
+                productCollection.InsertManyAsync(GetPreconfigureProducts(user.Id.ToString()));
             }
         }
 
-        private static IEnumerable<Product> GetPreconfigureProducts()
+        private static IEnumerable<Product> GetPreconfigureProducts(string userId)
         {
             return new List<Product>()
             {
@@ -87,6 +90,7 @@ namespace Persistence.Context
                     Seller = "Ebay",
                     Stock = 50,
                     NumOfReviews = 32,
+                    User = userId,
                     Reviews = new List<Review>{ }
                 },
                 new Product()
@@ -107,6 +111,7 @@ namespace Persistence.Context
                     Seller = "Amazon",
                     Stock = 0,
                     NumOfReviews = 2,
+                    User = userId,
                     Reviews = new List<Review>{ }
                 },
                 new Product()
@@ -127,6 +132,7 @@ namespace Persistence.Context
                     Seller = "Ebay",
                     Stock = 1,
                     NumOfReviews = 12,
+                    User = userId,
                     Reviews = new List<Review>{ }
                 },
                 new Product()
@@ -147,6 +153,7 @@ namespace Persistence.Context
                     Seller = "Amazon",
                     Stock = 11,
                     NumOfReviews = 112,
+                    User = userId,
                     Reviews = new List<Review>{ }
                 },
                 new Product()
@@ -167,6 +174,7 @@ namespace Persistence.Context
                     Seller =  "Amazon",
                     Stock = 1123,
                     NumOfReviews = 6,
+                    User = userId,
                     Reviews = new List<Review>{ }
                 },
             };

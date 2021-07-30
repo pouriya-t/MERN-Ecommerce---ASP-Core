@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Products.Commands
 {
-    public class Edit : IRequest<object>
+    public class EditProduct : IRequest<object>
     {
 
         public string Id { get; set; }
@@ -38,7 +38,7 @@ namespace Application.Products.Commands
 
 
 
-        public class Handler : IRequestHandler<Edit, object>
+        public class Handler : IRequestHandler<EditProduct, object>
         {
             private readonly IProductRepository _productRepository;
 
@@ -47,7 +47,7 @@ namespace Application.Products.Commands
                 _productRepository = productRepository;
             }
 
-            public async Task<object> Handle(Edit command, CancellationToken cancellationToken)
+            public async Task<object> Handle(EditProduct command, CancellationToken cancellationToken)
             {
                 var product = await _productRepository.GetProduct(command.Id);
 

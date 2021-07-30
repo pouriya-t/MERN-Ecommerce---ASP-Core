@@ -14,7 +14,7 @@ using Application.DTO.User;
 
 namespace Application.Users.Commands
 {
-    public class Register : IRequest<object>
+    public class RegisterUser : IRequest<object>
     {
         [Required]
         public string Name { get; set; }
@@ -27,7 +27,7 @@ namespace Application.Users.Commands
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        public class Handler : IRequestHandler<Register, object>
+        public class Handler : IRequestHandler<RegisterUser, object>
         {
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly IUserRepository _userRepository;
@@ -41,7 +41,7 @@ namespace Application.Users.Commands
                 _jwtGenerator = jwtGenerator;
             }
 
-            public async Task<object> Handle(Register request, CancellationToken cancellationToken)
+            public async Task<object> Handle(RegisterUser request, CancellationToken cancellationToken)
             {
                 if (await _userRepository.AnyUser(request.Email))
                     throw new RestException(HttpStatusCode.BadRequest, "Email already exists");

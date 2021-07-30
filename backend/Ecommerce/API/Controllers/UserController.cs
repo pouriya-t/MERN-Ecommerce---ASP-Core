@@ -27,7 +27,7 @@ namespace API.Controllers
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers()
         {
-            return Ok(await _mediator.Send(new List()));
+            return Ok(await _mediator.Send(new ListUsers()));
         }
 
         [Authorize(Roles = SD.Admin)]
@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<object>> Register(Register command)
+        public async Task<ActionResult<object>> Register(RegisterUser command)
         {
             return CreatedAtAction("Register", await _mediator.Send(command));
         }
@@ -55,7 +55,7 @@ namespace API.Controllers
         [HttpGet("me")]
         public async Task<ActionResult> Profile()
         {
-            return Ok(await _mediator.Send(new Profile()));
+            return Ok(await _mediator.Send(new ProfileUser()));
         }
 
         [Authorize]
@@ -64,6 +64,7 @@ namespace API.Controllers
         {
             return Ok(await _mediator.Send(command));
         }
+
 
         [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/user/{id}")]

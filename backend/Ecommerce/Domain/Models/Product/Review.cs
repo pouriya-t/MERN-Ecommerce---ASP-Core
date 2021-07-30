@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -9,13 +11,17 @@ namespace Domain.Models.Product
 {
     public class Review
     {
-        [Required]
+        [BsonId]
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string Id { get; set; } = ObjectId.GenerateNewId().ToString();
+
+        [BsonRepresentation(BsonType.ObjectId)]
+        public string User { get; set; }
+
         public string Name { get; set; }
 
-        [Required]
         public double Rating { get; set; }
 
-        [Required]
         public string Comment { get; set; }
     }
 }

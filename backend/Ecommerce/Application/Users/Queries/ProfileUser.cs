@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Queries
 {
-    public class Profile : IRequest<object>
+    public class ProfileUser : IRequest<object>
     {
 
-        public class Handler : IRequestHandler<Profile, object>
+        public class Handler : IRequestHandler<ProfileUser, object>
         {
             private readonly IUserAccessor _userAccessor;
 
@@ -18,7 +18,7 @@ namespace Application.Users.Queries
                 _userAccessor = userAccessor;
             }
 
-            public async Task<object> Handle(Profile query, CancellationToken cancellationToken)
+            public async Task<object> Handle(ProfileUser query, CancellationToken cancellationToken)
             {
                 var user = await _userAccessor.GetUserAsync();
                 var roles = await _userAccessor.GetRolesAsync(user);

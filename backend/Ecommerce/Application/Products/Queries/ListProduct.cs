@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Queries
 {
-    public class List : IRequest<object>
+    public class ListProduct : IRequest<object>
     {
 
         public string Keyword { get; set; }
         public int? Page { get; set; }
         public IDictionary<string, int> Price { get; set; }
 
-        public class Handler : IRequestHandler<List, object>
+        public class Handler : IRequestHandler<ListProduct, object>
         {
             private readonly IProductRepository _productRepository;
 
@@ -26,7 +26,7 @@ namespace Application.Products.Queries
                 _productRepository = productRepository;
             }
 
-            public async Task<object> Handle(List query, CancellationToken cancellationToken)
+            public async Task<object> Handle(ListProduct query, CancellationToken cancellationToken)
             {
                 IEnumerable<Product> products;
                 if (query.Keyword == null)

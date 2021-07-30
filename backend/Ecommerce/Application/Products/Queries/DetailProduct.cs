@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Queries
 {
-    public class Detail : IRequest<object>
+    public class DetailProduct : IRequest<object>
     {
         public string Id { get; set; }
 
-        public class Handler : IRequestHandler<Detail, object>
+        public class Handler : IRequestHandler<DetailProduct, object>
         {
             private readonly IProductRepository _productRepository;
 
@@ -21,7 +21,7 @@ namespace Application.Products.Queries
                 _productRepository = productRepository;
             }
 
-            public async Task<object> Handle(Detail query, CancellationToken cancellationToken)
+            public async Task<object> Handle(DetailProduct query, CancellationToken cancellationToken)
             {
                 if (ObjectId.TryParse(query.Id, out _))
                 {

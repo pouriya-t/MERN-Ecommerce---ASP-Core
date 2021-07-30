@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace Application.Users.Queries
 {
-    public class List : IRequest<object>
+    public class ListUsers : IRequest<object>
     {
 
-        public class Handler : IRequestHandler<List, object>
+        public class Handler : IRequestHandler<ListUsers, object>
         {
             private readonly IUserRepository _userRepository;
             private readonly IUserAccessor _userAccessor;
@@ -24,7 +24,7 @@ namespace Application.Users.Queries
                 _userAccessor = userAccessor;
             }
 
-            public async Task<object> Handle(List query, CancellationToken cancellationToken)
+            public async Task<object> Handle(ListUsers query, CancellationToken cancellationToken)
             {
                 var users = await _userRepository.GetUsers();
                 List<UserDto> userDtos = new List<UserDto>();

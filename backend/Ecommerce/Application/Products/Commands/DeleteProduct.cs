@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands
 {
-    public class Delete : IRequest<object>
+    public class DeleteProduct : IRequest<object>
     {
         public string Id { get; set; }
 
-        public class Handler : IRequestHandler<Delete, object>
+        public class Handler : IRequestHandler<DeleteProduct, object>
         {
             private readonly IProductRepository _productRepository;
 
@@ -19,7 +19,7 @@ namespace Application.Products.Commands
                 _productRepository = productRepository;
             }
 
-            public async Task<object> Handle(Delete query, CancellationToken cancellationToken)
+            public async Task<object> Handle(DeleteProduct query, CancellationToken cancellationToken)
             {
                 var success = await _productRepository.DeleteProduct(query.Id);
                 if (success)

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Application.Products.Commands
 {
-    public class Create : IRequest<object>
+    public class CreateProduct : IRequest<object>
     {
         [Required]
         [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters.")]
@@ -42,7 +42,7 @@ namespace Application.Products.Commands
         public ICollection<Review> Reviews { get; set; }
 
 
-        public class Handler : IRequestHandler<Create, object>
+        public class Handler : IRequestHandler<CreateProduct, object>
         {
             private readonly IProductRepository _productRepository;
             private readonly IUserAccessor _userAccessor;
@@ -52,10 +52,9 @@ namespace Application.Products.Commands
                 _productRepository = productRepository;
                 _userAccessor = userAccessor;
             }
-            public async Task<object> Handle(Create request, CancellationToken cancellationToken)
+            public async Task<object> Handle(CreateProduct request, CancellationToken cancellationToken)
             {
                 var user = _userAccessor.GetUserAsync();
-                var a = user.Id;
 
                 var product = new Product
                 {
