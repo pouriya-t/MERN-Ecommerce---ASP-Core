@@ -38,7 +38,13 @@ namespace API.Utility.DI
                     config.RegisterValidatorsFromAssemblyContaining<EditProduct>();
                 });
 
-
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000").AllowCredentials();
+                });
+            });
 
             services.AddIdentityMongoDbProvider<ApplicationUser, ApplicationRole, ObjectId>(identity =>
              {

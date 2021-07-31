@@ -169,6 +169,11 @@ namespace Persistence.Context
                             PublicId = "products/eahhtj1bkn1k9gjgd3hn",
                             Url = "https://res.cloudinary.com/bookit/image/upload/v1606233125/products/eahhtj1bkn1k9gjgd3hn.jpg"
                         },
+                        new Image
+                        {
+                            PublicId = "products/headphones_t2afnb",
+                            Url = "https://res.cloudinary.com/bookit/image/upload/v1606231281/products/headphones_t2afnb.jpg"
+                        },
                     },
                     Category = "Accessories",
                     Seller =  "Amazon",

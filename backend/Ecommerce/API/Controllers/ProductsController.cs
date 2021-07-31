@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace API.Controllers
 {
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    [Authorize]
     [ApiController]
     [Route("api/v1")]
     public class ProductsController : ControllerBase
