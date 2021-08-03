@@ -2,9 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System.ComponentModel.DataAnnotations;
-
+using Domain.Models.ImageModel;
 
 namespace Domain.Models.Product
 {

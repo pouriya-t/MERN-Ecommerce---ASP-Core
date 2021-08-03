@@ -14,6 +14,7 @@ namespace Application.Products.Queries
     {
 
         public string Keyword { get; set; }
+        public string Category { get; set; }
         public int? Page { get; set; }
         public IDictionary<string, int> Price { get; set; }
 
@@ -35,9 +36,10 @@ namespace Application.Products.Queries
                 }
                 else
                 {
-                    products = await _productRepository.FilterProducts(query.Keyword, query.Price);
+                    products = await _productRepository.FilterProducts(query.Keyword, query.Price,query.Category);
                 }
-                return new { Success = true, Count = products.Count(), Products = products };
+                int countAllProducts = await _productRepository.GetAllProductsCount();
+                return new { Success = true, ProductsCount = countAllProducts, ResPerPage = products.Count(), Products = products };
             }
         }
     }

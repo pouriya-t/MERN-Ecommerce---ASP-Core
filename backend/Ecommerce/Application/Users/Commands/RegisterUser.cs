@@ -11,6 +11,12 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.DTO.User;
+using Microsoft.AspNetCore.Http;
+using CloudinaryDotNet;
+using Microsoft.Extensions.Options;
+using Infrastructure.Helpers;
+using Domain.Interfaces.PhotoAccessor;
+using Domain.Models.ImageModel;
 
 namespace Application.Users.Commands
 {
@@ -27,18 +33,24 @@ namespace Application.Users.Commands
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
+        public IFormFile Avatar { get; set; }
+
         public class Handler : IRequestHandler<RegisterUser, object>
         {
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly IUserRepository _userRepository;
             private readonly IJwtGenerator _jwtGenerator;
+            private readonly IPhotoAccessor _photoAccessor;
+
+            
 
             public Handler(UserManager<ApplicationUser> userManager, IUserRepository userRepository
-                            , IJwtGenerator jwtGenerator)
+                            , IJwtGenerator jwtGenerator, IPhotoAccessor photoAccessor)
             {
                 _userManager = userManager;
                 _userRepository = userRepository;
                 _jwtGenerator = jwtGenerator;
+                _photoAccessor = photoAccessor;
             }
 
             public async Task<object> Handle(RegisterUser request, CancellationToken cancellationToken)
@@ -53,6 +65,17 @@ namespace Application.Users.Commands
                     Name = request.Name
                 };
 
+                var photoUploadResult = _photoAccessor.AddPhoto(request.Avatar);
+
+                
+                var photo = new Image
+                {
+                    PublicId = photoUploadResult.PublicId,
+                    Url = photoUploadResult.Url
+                };
+
+                user.Avatar = photo;
+
                 var createUser = await _userManager.CreateAsync(user, request.Password);
                 var createRole = await _userManager.AddToRoleAsync(user, SD.User);
                 var role = await _userManager.GetRolesAsync(user);
@@ -65,7 +88,7 @@ namespace Application.Users.Commands
                         Success = true,
                         Token = token.Result.Token,
                         ValidTo = token.Result.ValidTo,
-                        User = new UserDto(user, role) 
+                        User = new UserDto(user, role)
                     };
                 }
                 throw new Exception("Your request has a problem");

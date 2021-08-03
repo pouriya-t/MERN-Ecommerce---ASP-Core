@@ -60,10 +60,13 @@ namespace Application.Users.Queries
 
                 await _userRepository.UpdateUser(user);
 
-                string currentUrl = _httpContextAccessor.HttpContext.Request.Host.Value;
+                // string currentUrl = _httpContextAccessor.HttpContext.Request.Host.Value;
 
-                var content = $"<h2>Reset your password</h2><br /><br /><h4>Your token:</h4><br />" +
-                    $"<a href='https://{currentUrl}/api/v1/password/reset/{codeEncoded}'>Click Here for go to url</a>";
+                // var content = $"<h2>Reset your password</h2><br /><br /><h4>Your token:</h4><br />" +
+                //     $"<a href='https://{currentUrl}/api/v1/password/reset/{codeEncoded}'>Click Here for go to url</a>";
+
+                 var content = $"<h2>Reset your password</h2><br /><br /><h4>Your token:</h4><br />" +
+                    $"<a href='http://localhost:3000/password/reset/{codeEncoded}'>Click Here for go to url</a>";
 
 
                 var message = new Message(new string[] { user.Email }, "Reset password token", content, null);

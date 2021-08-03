@@ -38,7 +38,7 @@ namespace API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<object>> Register(RegisterUser command)
+        public async Task<ActionResult<object>> Register([FromForm] RegisterUser command)
         {
             return CreatedAtAction("Register", await _mediator.Send(command));
         }
@@ -48,7 +48,7 @@ namespace API.Controllers
         {
             var getUser = await _mediator.Send(query);
             SetTokenCookie(getUser.RefreshToken);
-            return Ok(new { Success = true, Token = getUser.RefreshToken });
+            return Ok(new { Success = true, Token = getUser.RefreshToken, User = getUser });
         }
 
         [Authorize]
@@ -60,7 +60,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPut("me/update")]
-        public async Task<ActionResult> UpdateProfile(UpdateProfile command)
+        public async Task<ActionResult> UpdateProfile([FromForm]UpdateProfile command)
         {
             return Ok(await _mediator.Send(command));
         }
@@ -68,7 +68,7 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/user/{id}")]
-        public async Task<ActionResult> AdminUpdate(string id ,AdminUpdate command)
+        public async Task<ActionResult> AdminUpdate(string id, AdminUpdate command)
         {
             command.Id = id;
             return Ok(await _mediator.Send(command));
@@ -83,10 +83,10 @@ namespace API.Controllers
         }
 
         [Authorize]
-        [HttpPost("logout")]
-        public async Task<ActionResult> Logout(Logout query)
+        [HttpGet("logout")]
+        public async Task<ActionResult> Logout()
         {
-            bool signOut = await _mediator.Send(query);
+            bool signOut = await _mediator.Send(new Logout());
             if (signOut)
             {
                 DeleteCookie();
@@ -96,24 +96,24 @@ namespace API.Controllers
         }
 
         [HttpPost("password/forgot")]
-        public async Task<ActionResult> ForgotPassword(ForgotPassword command)
+        public async Task<ActionResult> ForgotPassword([FromForm] ForgotPassword command)
         {
             return Ok(await _mediator.Send(command));
         }
 
         [HttpPut("password/reset/{*token}")]
-        public async Task<ActionResult> ResetPassword(string token,ResetPassword command)
+        public async Task<ActionResult> ResetPassword(string token,[FromForm] ResetPassword command)
         {
             command.Token = token;
             return Ok(await _mediator.Send(command));
         }
 
         [HttpPut("password/update")]
-        public async Task<ActionResult> UpdatePassword(UpdatePassword command)
+        public async Task<ActionResult> UpdatePassword([FromForm]UpdatePassword command)
         {
             var user = await _mediator.Send(command);
             SetTokenCookie(user.RefreshToken);
-            return Ok(new { Success = true, Token = user.RefreshToken , User = user });
+            return Ok(new { Success = true, Token = user.RefreshToken, User = user });
         }
 
         // set and remove cookie

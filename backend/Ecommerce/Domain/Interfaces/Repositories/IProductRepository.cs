@@ -7,11 +7,14 @@ namespace Domain.Interfaces.Repositories
     public interface IProductRepository
     {
         Task<IEnumerable<Product>> GetProducts(int? page);
-        Task<IEnumerable<Product>> FilterProducts(string keyword, IDictionary<string, int> price);
+        Task<IEnumerable<Product>> FilterProducts(string keyword, IDictionary<string, int> price
+                                                , string category);
 
         Task<Product> GetProduct(string id);
 
         Task<IEnumerable<Product>> GetProductByName(string name);
+
+        Task<int> GetAllProductsCount();
 
         //Task<IEnumerable<Product.Product>> GetProductByCategory(string categoryName);
 

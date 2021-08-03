@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Domain.Models.ImageModel;
 
 namespace Application.Products.Commands
 {

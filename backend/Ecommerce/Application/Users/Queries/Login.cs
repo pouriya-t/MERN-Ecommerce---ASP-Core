@@ -1,6 +1,7 @@
 ﻿using Application.DTO.User;
 using Application.Errors;
 using Domain.Interfaces.Jwt;
+using Domain.Interfaces.Repositories;
 using Domain.Models.User;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -31,7 +32,8 @@ namespace Application.Users.Queries
             private readonly IJwtGenerator _jwtGenerator;
 
             public Handler(UserManager<ApplicationUser> userManager,
-                            SignInManager<ApplicationUser> signInManager, IJwtGenerator jwtGenerator)
+                            SignInManager<ApplicationUser> signInManager, 
+                            IJwtGenerator jwtGenerator)
             {
                 _jwtGenerator = jwtGenerator;
                 _signInManager = signInManager;
@@ -40,7 +42,7 @@ namespace Application.Users.Queries
 
             public async Task<UserDto> Handle(Login request, CancellationToken cancellationToken)
             {
-                var user = await _userManager.FindByNameAsync(request.Email);
+                var user = await _userManager.FindByEmailAsync(request.Email);
 
                 if (user == null)
                     throw new RestException(HttpStatusCode.NotFound);
@@ -48,7 +50,7 @@ namespace Application.Users.Queries
                 var role = await _userManager.GetRolesAsync(user);
 
                 var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-               
+
                 if (result.Succeeded)
                 {
                     var token = _jwtGenerator.CreateToken(user);

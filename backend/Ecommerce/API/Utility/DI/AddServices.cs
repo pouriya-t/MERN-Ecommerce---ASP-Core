@@ -22,6 +22,9 @@ using Infrastructure.Security.UserAccessor;
 using Microsoft.AspNetCore.Identity;
 using Domain.Interfaces.EmailService;
 using Infrastructure.EmailService;
+using Infrastructure.Helpers;
+using Domain.Interfaces.PhotoAccessor;
+using Infrastructure.PhotoAccessor;
 
 namespace API.Utility.DI
 {
@@ -118,7 +121,7 @@ namespace API.Utility.DI
 
 
 
-
+            services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
 
 
             services.AddScoped<IMongoContext, MongoContext>();
@@ -127,6 +130,7 @@ namespace API.Utility.DI
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IUserAccessor, UserAccessor>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
+            services.AddScoped<IPhotoAccessor, PhotoAccessor>();
 
             services.AddSingleton<IEmailSender, EmailSender>();
 

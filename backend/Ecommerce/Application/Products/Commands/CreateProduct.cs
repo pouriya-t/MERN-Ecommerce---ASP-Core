@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces.Repositories;
 using Domain.Interfaces.UserAccessor;
+using Domain.Models.ImageModel;
 using Domain.Models.Product;
 using MediatR;
 using System.Collections.Generic;

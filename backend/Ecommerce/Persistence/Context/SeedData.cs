@@ -1,4 +1,5 @@
-﻿using Domain.Models.Product;
+﻿using Domain.Models.ImageModel;
+using Domain.Models.Product;
 using Domain.Models.User;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;

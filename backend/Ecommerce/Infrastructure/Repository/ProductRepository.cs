@@ -51,6 +51,11 @@ namespace Infrastructure.Repository
             return await _context.Products.Find(p => p.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<int> GetAllProductsCount()
+        {
+            return await _context.Products.AsQueryable().CountAsync();
+        }
+
         public async Task<IEnumerable<Product>> GetProductByName(string name)
         {
             FilterDefinition<Product> filter = Builders<Product>.Filter.ElemMatch(p => p.Name, name);
@@ -81,7 +86,7 @@ namespace Infrastructure.Repository
         }
 
         public async Task<IEnumerable<Product>> FilterProducts(string keyword,
-                        IDictionary<string, int> price)
+                        IDictionary<string, int> price, string category)
         {
             string searchToLower = keyword.ToLower();
             string searchToUpper = keyword.ToUpper();
@@ -100,7 +105,7 @@ namespace Infrastructure.Repository
                 Where(p => p.Description.Contains(searchToLower) | p.Description.Contains(searchToUpper)
                 | p.Description.Contains(keyword) | p.Description.Contains(upToFirstChar));
 
-
+            var getProductCategory = Builders<Product>.Filter.Where(p => p.Category == category);
 
             if (price.ContainsKey("gt") || price.ContainsKey("lt")
                 || price.ContainsKey("gte") || price.ContainsKey("lte"))
@@ -110,7 +115,12 @@ namespace Infrastructure.Repository
                     var lt = Builders<Product>.Filter.Lt(p => p.Price, price["lt"]);
                     var gt = Builders<Product>.Filter.Gt(p => p.Price, price["gt"]);
 
-                    return await _context.Products.Find((filterByName | filterByDescription) & (lt & gt)).ToListAsync();
+                    if (category != null)
+                        return await _context.Products
+                        .Find((getProductCategory) & (filterByName | filterByDescription) & (lt & gt)).ToListAsync();
+                    else
+                        return await _context.Products
+                        .Find((filterByName | filterByDescription) & (lt & gt)).ToListAsync();
                 }
 
                 else if (price.ContainsKey("lte") && price.ContainsKey("gt"))
@@ -118,7 +128,13 @@ namespace Infrastructure.Repository
                     var lte = Builders<Product>.Filter.Lt(p => p.Price, price["lte"]);
                     var gt = Builders<Product>.Filter.Gt(p => p.Price, price["gt"]);
 
-                    return await _context.Products.Find((filterByName | filterByDescription) & (lte & gt)).ToListAsync();
+
+                    if (category != null)
+                        return await _context.Products
+                        .Find((getProductCategory) & (filterByName | filterByDescription) & (lte & gt)).ToListAsync();
+                    else
+                        return await _context.Products
+                        .Find((filterByName | filterByDescription) & (lte & gt)).ToListAsync();
                 }
 
                 else if (price.ContainsKey("lt") && price.ContainsKey("gte"))
@@ -126,7 +142,13 @@ namespace Infrastructure.Repository
                     var lt = Builders<Product>.Filter.Lt(p => p.Price, price["lt"]);
                     var gte = Builders<Product>.Filter.Gt(p => p.Price, price["gte"]);
 
-                    return await _context.Products.Find((filterByName | filterByDescription) & (lt & gte)).ToListAsync();
+
+                    if (category != null)
+                        return await _context.Products
+                        .Find((getProductCategory) & (filterByName | filterByDescription) & (lt & gte)).ToListAsync();
+                    else
+                        return await _context.Products
+                        .Find((filterByName | filterByDescription) & (lt & gte)).ToListAsync();
                 }
 
                 else if (price.ContainsKey("lte") && price.ContainsKey("gte"))
@@ -134,7 +156,13 @@ namespace Infrastructure.Repository
                     var lte = Builders<Product>.Filter.Lt(p => p.Price, price["lte"]);
                     var gte = Builders<Product>.Filter.Gt(p => p.Price, price["gte"]);
 
-                    return await _context.Products.Find((filterByName | filterByDescription) & (lte & gte)).ToListAsync();
+
+                    if (category != null)
+                        return await _context.Products
+                        .Find((getProductCategory) & (filterByName | filterByDescription) & (lte & gte)).ToListAsync();
+                    else
+                        return await _context.Products
+                        .Find((filterByName | filterByDescription) & (lte & gte)).ToListAsync();
                 }
 
                 else if (price.ContainsKey("gt") || price.ContainsKey("gte"))
@@ -145,7 +173,12 @@ namespace Infrastructure.Repository
                         filterByPrice = Builders<Product>.Filter.Gte(p => p.Price, price["gte"]);
 
                     //return await _context.Products.Find(filterByPrice).ToListAsync();
-                    return await _context.Products.Find((filterByName | filterByDescription) & (filterByPrice)).ToListAsync();
+                    if (category != null)
+                        return await _context.Products
+                        .Find((getProductCategory) & (filterByName | filterByDescription) & (filterByPrice)).ToListAsync();
+                    else
+                        return await _context.Products
+                        .Find((filterByName | filterByDescription) & (filterByPrice)).ToListAsync();
                 }
 
                 else if (price.ContainsKey("lt") || price.ContainsKey("lte"))
@@ -155,15 +188,20 @@ namespace Infrastructure.Repository
                     else
                         filterByPrice = Builders<Product>.Filter.Lte(p => p.Price, price["lte"]);
 
-                    return await _context.Products.Find((filterByName | filterByDescription) & filterByPrice).ToListAsync();
+                    if (category != null)
+                        return await _context.Products
+                        .Find((getProductCategory) & (filterByName | filterByDescription) & (filterByPrice)).ToListAsync();
+                    else
+                        return await _context.Products
+                        .Find((filterByName | filterByDescription) & (filterByPrice)).ToListAsync();
                 }
             }
-
-
-
-            return await _context.Products.Find(filterByName | filterByDescription).ToListAsync();
-
-
+            if (category != null)
+                return await _context.Products
+                .Find((getProductCategory) & (filterByName | filterByDescription)).ToListAsync();
+            else
+                return await _context.Products
+                .Find(filterByName | filterByDescription).ToListAsync();
         }
 
         //public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)

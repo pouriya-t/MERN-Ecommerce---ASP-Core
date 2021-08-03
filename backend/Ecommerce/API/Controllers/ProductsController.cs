@@ -30,9 +30,9 @@ namespace API.Controllers
         // /api/v1/products
         [HttpGet("products")]
         public async Task<IActionResult> GetProducts(int? page = 1, string keyword = null,
-            [FromQuery(Name = "price")] IDictionary<string, int> price = null)
+            [FromQuery(Name = "price")] IDictionary<string, int> price = null, string category = null)
         {
-            return Ok(await _mediator.Send(new ListProduct() { Keyword = keyword, Price = price, Page = page }));
+            return Ok(await _mediator.Send(new ListProduct() { Keyword = keyword, Price = price, Page = page, Category = category }));
         }
 
         [HttpGet("product/{id}")]

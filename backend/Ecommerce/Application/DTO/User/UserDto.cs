@@ -1,4 +1,5 @@
-﻿using Domain.Models.User;
+﻿using Domain.Models.ImageModel;
+using Domain.Models.User;
 using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
@@ -14,7 +15,7 @@ namespace Application.DTO.User
         [BsonRepresentation(BsonType.ObjectId)]
         public string _id { get; set; }
 
-        public Avatar Avatar { get; set; }
+        public Image Avatar { get; set; }
 
         public string Role { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Identity.Mongo.Model;
+using Domain.Models.ImageModel;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using System;
@@ -11,7 +12,7 @@ namespace Domain.Models.User
     {
         public string Name { get; set; }
 
-        public Avatar Avatar { get; set; }
+        public Image Avatar { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
 
