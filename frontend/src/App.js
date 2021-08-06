@@ -7,6 +7,10 @@ import Header from "./components/layout/Header";
 import Home from "./components/Home";
 import ProductDetails from "./components/product/ProductDetails";
 
+import Cart from "./components/cart/Cart";
+import Shipping from "./components/cart/Shipping";
+import ConfirmOrder from "./components/cart/ConfirmOrder";
+
 import "./App.css";
 import Login from "./components/user/Login";
 import Register from "./components/user/Register";
@@ -34,13 +38,21 @@ function App() {
           <Route path="/search/:keyword" component={Home} />
           <Route path="/product/:id" component={ProductDetails} exact />
 
+          <Route path="/cart" component={Cart} exact />
+          <ProtectedRoute path="/shipping" component={Shipping} />
+          <ProtectedRoute path="/order/confirm" component={ConfirmOrder} />
+
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/password/forgot" component={ForgotPassword} exact />
           <Route path="/password/reset/:token" component={NewPassword} exact />
           <ProtectedRoute path="/me" component={Profile} exact />
           <ProtectedRoute path="/me/update" component={UpdateProfile} exact />
-          <ProtectedRoute path="/password/update" component={UpdatePassword} exact />
+          <ProtectedRoute
+            path="/password/update"
+            component={UpdatePassword}
+            exact
+          />
         </div>
         <Footer />
       </div>

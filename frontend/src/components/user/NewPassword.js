@@ -12,7 +12,7 @@ const NewPassword = ({ history, match }) => {
 
   const alert = useAlert();
   const dispatch = useDispatch();
-
+  
   const { error, success } = useSelector((state) => state.forgotPassword);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ const NewPassword = ({ history, match }) => {
     const formData = new FormData();
     formData.set("password", password);
     formData.set("confirmPassword", confirmPassword);
-
+    console.log(match)
     dispatch(resetPassword(match.params.token, formData));
   };
 
