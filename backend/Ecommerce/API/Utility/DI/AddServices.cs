@@ -134,6 +134,7 @@ namespace API.Utility.DI
 
             services.AddSingleton<IEmailSender, EmailSender>();
 
+
             var assembly = AppDomain.CurrentDomain.Load("Application");
             services.AddMediatR(assembly);
 

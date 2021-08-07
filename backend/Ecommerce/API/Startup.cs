@@ -1,6 +1,5 @@
 using API.Middleware;
 using API.Utility.DI;
-using Persistence.Context;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Infrastructure.EmailService;
+using Stripe;
 
 namespace API
 {
@@ -57,6 +57,7 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            StripeConfiguration.ApiKey = Configuration.GetSection("Stripe")["SecretKey"];
             app.UseCors("CorsPolicy");
 
             app.UseAuthentication();

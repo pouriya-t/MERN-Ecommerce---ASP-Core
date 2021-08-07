@@ -19,7 +19,7 @@ const Login = ({ history, location }) => {
     (state) => state.auth
   );
 
-const redirect = location.search ? location.search.split('=')[1] : '/'
+  const redirect = location.search ? location.search.split("=")[1] : "/";
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -30,7 +30,7 @@ const redirect = location.search ? location.search.split('=')[1] : '/'
       alert.error(error);
       dispatch(clearErrors());
     }
-  }, [dispatch, alert, isAuthenticated, error, history]);
+  }, [dispatch, alert, isAuthenticated, error, history, redirect]);
 
   const submitHandler = (e) => {
     e.preventDefault();

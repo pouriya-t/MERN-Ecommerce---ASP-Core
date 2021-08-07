@@ -29,6 +29,8 @@ namespace Application.Orders.Commands
 
         public double ShippingPrice { get; set; } = 0.0;
 
+        public double TotalPrice { get; set; } = 0.0;
+
         public string OrderStatus { get; set; } = "Processing";
 
         public DateTime DeliveredAt { get; set; }
@@ -46,11 +48,11 @@ namespace Application.Orders.Commands
             }
             public async Task<object> Handle(CreateOrder request, CancellationToken cancellationToken)
             {
-                double totalPrice = 0;
-                foreach (var price in request.OrderItems)
-                {
-                    totalPrice += (price.Price * price.Quantity);
-                }
+                //double totalPrice = 0;
+                //foreach (var price in request.OrderItems)
+                //{
+                //    totalPrice += (price.Price * price.Quantity);
+                //}
                 var order = new Order
                 {
                     ShippingInfo = request.ShippingInfo,
@@ -61,7 +63,7 @@ namespace Application.Orders.Commands
                     ItemsPrice = request.ItemsPrice,
                     TaxPrice = request.TaxPrice,
                     ShippingPrice = request.ShippingPrice,
-                    TotalPrice = totalPrice,
+                    TotalPrice = request.TotalPrice,
                     OrderStatus = request.OrderStatus,
                     DeliveredAt = request.DeliveredAt,
                     CreatedAt = request.CreatedAt
