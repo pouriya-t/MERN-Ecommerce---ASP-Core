@@ -14,17 +14,20 @@ const Header = () => {
   const { user, loading } = useSelector((state) => state.auth);
   const { cartItems } = useSelector((state) => state.cart);
 
+
   const logoutHandler = () => {
     dispatch(logout());
     alert.success("Logged out successfully.");
   };
+
+  //    "start": "react-scripts start",
   return (
     <Fragment>
       <nav className="navbar row">
         <div className="col-12 col-md-3">
           <div className="navbar-brand">
             <Link to="/">
-              <img src="./images/logo.png" alt="Head" />
+              <img src="/images/logo.png" alt="Head" />
             </Link>
           </div>
         </div>
@@ -63,7 +66,7 @@ const Header = () => {
                 ) : (
                   <img
                     className="avatar mr-3"
-                    src="./images/default_avatar.png"
+                    src="/images/default_avatar.png"
                     alt="Avatar"
                   />
                 )}
@@ -76,6 +79,9 @@ const Header = () => {
                     Dashboard
                   </Link>
                 )}
+                <Link className="dropdown-item" to="/orders/me">
+                  Orders
+                </Link>
                 <Link className="dropdown-item" to="/me">
                   Profile
                 </Link>

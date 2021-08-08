@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { countries } from "countries-list";
 import MetaData from "../layout/MetaData";
 import CheckoutSteps from "./CheckoutSteps";
@@ -16,11 +16,23 @@ const Shipping = ({ history }) => {
 
   const { shippingInfo } = useSelector((state) => state.cart);
 
-  const [address, setAddress] = useState(shippingInfo.address);
-  const [city, setCity] = useState(shippingInfo.city);
-  const [postalCode, setPostalCode] = useState(shippingInfo.postalCode);
-  const [phoneNo, setPhoneNo] = useState(shippingInfo.phoneNo);
-  const [country, setCountry] = useState(shippingInfo.country);
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [postalCode, setPostalCode] = useState(0);
+  const [phoneNo, setPhoneNo] = useState(0);
+  const [country, setCountry] = useState("");
+  
+  useEffect(() => {
+    if(!!shippingInfo.address){
+      setAddress(shippingInfo.address);
+      setCity(shippingInfo.city);
+      setPostalCode(shippingInfo.postalCode);
+      setPhoneNo(shippingInfo.phoneNo);
+      setCountry(shippingInfo.country);
+      console.log("aaa")
+    }
+    
+  }, [shippingInfo]);
 
   const dispatch = useDispatch();
 

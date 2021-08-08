@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces.Repositories;
+using Domain.Interfaces.UserAccessor;
 using Domain.Models.Order;
 using MediatR;
 using MongoDB.Bson;
@@ -14,8 +15,6 @@ namespace Application.Orders.Commands
     {
 
         public ShippingInfo ShippingInfo { get; set; }
-
-        public string User { get; set; }
 
         public ICollection<OrderItems> OrderItems { get; set; }
 
@@ -41,22 +40,20 @@ namespace Application.Orders.Commands
         public class Handler : IRequestHandler<CreateOrder, object>
         {
             private readonly IOrderRepository _orderRepository;
+            private readonly IUserAccessor _userAccessor;
 
-            public Handler(IOrderRepository orderRepository)
+            public Handler(IOrderRepository orderRepository, IUserAccessor userAccessor)
             {
                 _orderRepository = orderRepository;
+                _userAccessor = userAccessor;
             }
             public async Task<object> Handle(CreateOrder request, CancellationToken cancellationToken)
             {
-                //double totalPrice = 0;
-                //foreach (var price in request.OrderItems)
-                //{
-                //    totalPrice += (price.Price * price.Quantity);
-                //}
+                var user = await _userAccessor.GetUserAsync();
                 var order = new Order
                 {
                     ShippingInfo = request.ShippingInfo,
-                    User = request.User,
+                    User = user.Id.ToString(),
                     OrderItems = request.OrderItems,
                     PaymentInfo = request.PaymentInfo,
                     PaidAt = request.PaidAt,

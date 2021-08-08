@@ -7,6 +7,8 @@ import { useAlert } from "react-alert";
 import { useDispatch, useSelector } from "react-redux";
 import { createOrder, clearErrors } from "../../actions/orderActions";
 
+import { clearCart } from "../../actions/cartActions";
+
 import {
   useStripe,
   useElements,
@@ -108,6 +110,7 @@ const Payment = ({ history }) => {
           dispatch(createOrder(order));
 
           history.push("/success");
+          dispatch(clearCart());
         } else {
           alert.error("There is some issue while payment processing");
         }

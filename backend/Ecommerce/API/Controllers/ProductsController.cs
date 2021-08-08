@@ -50,7 +50,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPut("review")]
-        public async Task<ActionResult> UserReview(UserReview command)
+        public async Task<ActionResult> UserReview([FromForm] UserReview command)
         {
             return Ok(await _mediator.Send(command));
         }

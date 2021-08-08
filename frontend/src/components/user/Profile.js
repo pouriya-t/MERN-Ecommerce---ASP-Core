@@ -27,7 +27,7 @@ const Profile = () => {
                     alt={user.name}
                   />
                 ) : (
-                  <img src="./images/default_avatar.png" alt="Avatar" />
+                  <img src="/images/default_avatar.png" alt="Avatar" />
                 )}
               </figure>
               <Link

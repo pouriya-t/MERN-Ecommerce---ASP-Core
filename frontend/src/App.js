@@ -13,6 +13,9 @@ import ConfirmOrder from "./components/cart/ConfirmOrder";
 import Payment from "./components/cart/Payment";
 import OrderSuccess from "./components/cart/OrderSuccess";
 
+import ListOrders from "./components/order/ListOrders";
+import OrderDetails from "./components/order/OrderDetails";
+
 import "./App.css";
 import Login from "./components/user/Login";
 import Register from "./components/user/Register";
@@ -30,6 +33,7 @@ import axios from "axios";
 // Payment
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+
 
 function App() {
   const [stripeApiKey, setStripeKey] = useState("");
@@ -74,6 +78,8 @@ function App() {
             component={UpdatePassword}
             exact
           />
+          <ProtectedRoute path="/orders/me" component={ListOrders} exact />
+          <ProtectedRoute path="/orderdetails/:id" component={OrderDetails} exact />
         </div>
         <Footer />
       </div>
