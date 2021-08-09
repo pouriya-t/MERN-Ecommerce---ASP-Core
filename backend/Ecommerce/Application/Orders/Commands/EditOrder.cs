@@ -23,7 +23,7 @@ namespace Application.Orders.Commands
 
         public double ShippingPrice { get; set; }
 
-        public string OrderStatus { get; set; }
+        public string Status { get; set; }
 
 
         public class Handler : IRequestHandler<EditOrder, object>
@@ -52,7 +52,7 @@ namespace Application.Orders.Commands
                 {
                     order.ShippingPrice = request.ShippingPrice;
                 }
-                order.OrderStatus = request.OrderStatus ?? order.OrderStatus;                
+                order.OrderStatus = request.Status ?? order.OrderStatus;                
 
 
 

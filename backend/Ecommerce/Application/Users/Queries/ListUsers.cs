@@ -35,7 +35,7 @@ namespace Application.Users.Queries
                     var userFromDto = new UserDto(user, role);
                     userDtos.Add(userFromDto);
                 }
-                return new { Success = true, User = userDtos };
+                return new { Success = true, Users = userDtos };
             }
         }
     }

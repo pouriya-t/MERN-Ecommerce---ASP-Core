@@ -1,5 +1,6 @@
 ﻿using Application.DTO.User;
 using Application.Errors;
+using Domain.Interfaces.PhotoAccessor;
 using Domain.Interfaces.Repositories;
 using Domain.Interfaces.UserAccessor;
 using Domain.Models.User;
@@ -28,10 +29,12 @@ namespace Application.Users.Commands
         public class Handler : IRequestHandler<AdminDelete, object>
         {
             private readonly IUserRepository _userRepository;
+            private readonly IPhotoAccessor _photoAccessor;
 
-            public Handler(IUserRepository userRepository)
+            public Handler(IUserRepository userRepository, IPhotoAccessor photoAccessor)
             {
                 _userRepository = userRepository;
+                _photoAccessor = photoAccessor;
             }
 
             public async Task<object> Handle(AdminDelete command, CancellationToken cancellationToken)
@@ -40,6 +43,10 @@ namespace Application.Users.Commands
 
                 if (user != null)
                 {
+                    if(user.Avatar != null)
+                    { 
+                        _photoAccessor.DeletePhoto(user.Avatar.PublicId);
+                    }
                     await _userRepository.DeleteUser(command.Id);
                     return new { Success = true };
                 }

@@ -3,6 +3,7 @@ using Domain.Interfaces.Repositories;
 using Domain.Interfaces.UserAccessor;
 using Domain.Models.Product;
 using MediatR;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,6 +45,11 @@ namespace Application.Products.Commands
                         Rating = command.Rating,
                         Comment = command.Comment
                     };
+
+                    if(product.Reviews == null)
+                    {
+                        product.Reviews = new List<Review>();
+                    }
 
                     product.Reviews.Add(review);
 

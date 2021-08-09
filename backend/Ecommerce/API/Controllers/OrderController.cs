@@ -48,7 +48,7 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/order/{id}")]
-        public async Task<IActionResult> EditOrder(string id,EditOrder command)
+        public async Task<IActionResult> EditOrder(string id,[FromForm] EditOrder command)
         {
             command.Id = id;
             return Ok(await _mediator.Send(command));
@@ -56,10 +56,9 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpDelete("admin/order/{id}")]
-        public async Task<IActionResult> DeleteOrder(string id, DeleteOrder command)
+        public async Task<IActionResult> DeleteOrder(string id)
         {
-            command.Id = id;
-            return Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(new DeleteOrder { Id = id }));
         }
     }
 }

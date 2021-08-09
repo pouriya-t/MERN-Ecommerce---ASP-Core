@@ -24,14 +24,14 @@ namespace API.Controllers
         }
 
         [Authorize(Roles = SD.Admin)]
-        [HttpGet("users")]
+        [HttpGet("admin/users")]
         public async Task<IActionResult> GetUsers()
         {
             return Ok(await _mediator.Send(new ListUsers()));
         }
 
         [Authorize(Roles = SD.Admin)]
-        [HttpGet("user/{id}")]
+        [HttpGet("admin/user/{id}")]
         public async Task<IActionResult> GetUser(string id)
         {
             return Ok(await _mediator.Send(new GetUser() { Id = id }));
@@ -60,7 +60,7 @@ namespace API.Controllers
 
         [Authorize]
         [HttpPut("me/update")]
-        public async Task<ActionResult> UpdateProfile([FromForm]UpdateProfile command)
+        public async Task<ActionResult> UpdateProfile([FromForm] UpdateProfile command)
         {
             return Ok(await _mediator.Send(command));
         }
@@ -68,7 +68,7 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/user/{id}")]
-        public async Task<ActionResult> AdminUpdate(string id, AdminUpdate command)
+        public async Task<ActionResult> AdminUpdate(string id,[FromForm] AdminUpdate command)
         {
             command.Id = id;
             return Ok(await _mediator.Send(command));
@@ -76,10 +76,9 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpDelete("admin/user/{id}")]
-        public async Task<ActionResult> AdminDelete(string id, AdminDelete command)
+        public async Task<ActionResult> AdminDelete(string id)
         {
-            command.Id = id;
-            return Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(new AdminDelete{ Id = id }));
         }
 
         [Authorize]
