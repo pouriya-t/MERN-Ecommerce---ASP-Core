@@ -37,5 +37,10 @@ namespace Domain.Models.Product
         [BsonRepresentation(BsonType.ObjectId)]
         public string User { get; set; }
 
+        public Product()
+        {
+            Images = new List<Image>();
+        }
+
     }
 }

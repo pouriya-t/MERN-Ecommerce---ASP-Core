@@ -18,6 +18,13 @@ namespace Infrastructure.Repository
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
+
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+        {
+            return await _context.Products.Find(p => true).SortByDescending(p => p.CreatedAt)
+                    .ToListAsync();
+        }
+
         public async Task<IEnumerable<Product>> GetProducts(int? page)
         {
             int limit = 4;
@@ -203,6 +210,7 @@ namespace Infrastructure.Repository
                 return await _context.Products
                 .Find(filterByName | filterByDescription).ToListAsync();
         }
+
 
         //public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
         //{

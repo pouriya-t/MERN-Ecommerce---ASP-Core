@@ -9,6 +9,7 @@ namespace Domain.Interfaces.Repositories
         Task<IEnumerable<Product>> GetProducts(int? page);
         Task<IEnumerable<Product>> FilterProducts(string keyword, IDictionary<string, int> price
                                                 , string category);
+        Task<IEnumerable<Product>> GetAllProductsAsync();
 
         Task<Product> GetProduct(string id);
 

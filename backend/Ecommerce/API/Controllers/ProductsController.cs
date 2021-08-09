@@ -35,6 +35,13 @@ namespace API.Controllers
             return Ok(await _mediator.Send(new ListProduct() { Keyword = keyword, Price = price, Page = page, Category = category }));
         }
 
+        [Authorize(Roles = SD.Admin)]
+        [HttpGet("admin/products")]
+        public async Task<IActionResult> GetAllProducts()
+        {
+            return Ok(await _mediator.Send(new ListAllProducts()));
+        }
+
         [HttpGet("product/{id}")]
         public async Task<IActionResult> GetProduct(string id)
         {
@@ -43,9 +50,9 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpPost("admin/product/new")]
-        public async Task<IActionResult> Create(CreateProduct command)
+        public async Task<ActionResult> Create([FromForm] CreateProduct command)
         {
-            return CreatedAtAction("Create", await _mediator.Send(command));
+            return Ok(await _mediator.Send(command));
         }
 
         [Authorize]
@@ -71,7 +78,7 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/product/{id}")]
-        public async Task<IActionResult> Edit(string id, EditProduct command)
+        public async Task<IActionResult> Edit(string id,[FromForm] EditProduct command)
         {
             command.Id = id;
             return Ok(await _mediator.Send(command));
