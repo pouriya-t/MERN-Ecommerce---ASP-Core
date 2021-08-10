@@ -52,7 +52,7 @@ namespace API.Controllers
         [HttpPost("admin/product/new")]
         public async Task<ActionResult> Create([FromForm] CreateProduct command)
         {
-            return Ok(await _mediator.Send(command));
+            return CreatedAtAction("Create", await _mediator.Send(command));
         }
 
         [Authorize]
@@ -78,7 +78,7 @@ namespace API.Controllers
 
         [Authorize(Roles = SD.Admin)]
         [HttpPut("admin/product/{id}")]
-        public async Task<IActionResult> Edit(string id,[FromForm] EditProduct command)
+        public async Task<IActionResult> Edit(string id, [FromForm] EditProduct command)
         {
             command.Id = id;
             return Ok(await _mediator.Send(command));
